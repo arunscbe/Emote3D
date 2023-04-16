@@ -52,7 +52,7 @@ function detectWebGL() {
 let material = {
     cube: new THREE.MeshLambertMaterial({
         //   map:THREE.ImageUtils.loadTexture("assets/Road texture.png"),
-        color: 0xffffff,
+        color: 0xffff00,
         combine: THREE.MixOperation,
         side: THREE.DoubleSide
     }),
@@ -89,9 +89,10 @@ class sceneSetup {
         // this.controls.minPolarAngle = 140 / 120;
         // this.controls.minAzimuthAngle = -280 / 120;
         // this.controls.maxAzimuthAngle = -115 / 120;
+        // this.controls.target = new THREE.Vector3(this.camPoint.position.x, this.camPoint.position.y, this.camPoint.position.z);
     }
     addingCube() {
-        this.geo = new THREE.BoxBufferGeometry(.0001, .0001, .0001);
+        this.geo = new THREE.BoxBufferGeometry(.1, 2, .1);
         this.mat = material.cube;
         this.camPoint = new THREE.Mesh(this.geo, this.mat);
         this.scene.add(this.camPoint);
@@ -107,6 +108,13 @@ class sceneSetup {
     animate() {
         requestAnimationFrame(this.animate.bind(this));
         // this.controls.update();
+        let relativeCameraOffset = new THREE.Vector3(2, 4, 2);
+        let cameraOffset = relativeCameraOffset.applyMatrix4(this.camPoint.matrixWorld);
+        this.cameraMain.position.x = cameraOffset.x;
+        this.cameraMain.position.y = cameraOffset.y;
+        this.cameraMain.position.z = cameraOffset.z;
+        this.cameraMain.lookAt(this.camPoint.position.x, this.camPoint.position.y, this.camPoint.position.z);
+
         this.renderer.render(this.scene, this.cameraMain);
     }
     render() {
@@ -131,11 +139,11 @@ const onDocumentMouseDown = (event) => {
     let intersects = raycaster.intersectObjects( arrayObjects,true );
     if ( intersects.length > 0 ) {
         SELECTED = intersects[ 0 ].point;
-        playerMove(SELECTED);
-        // _Player.position.set(SELECTED.x,.2,SELECTED.z);		 
+        playerMove(SELECTED);	 
     }
 }
 const playerMove = (data) =>{
+    TweenMax.to(init.camPoint.position,2,{x:data.x, y:.2, z:data.z,onUpdate:function(){}});
     TweenMax.to(_Player.position,2,{x:data.x, y:.2, z:data.z,onUpdate:function(){
         console.log('moving.....');
     },onComplete:()=>{
