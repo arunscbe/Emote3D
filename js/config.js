@@ -130,9 +130,17 @@ const onDocumentMouseDown = (event) => {
     raycaster.setFromCamera( mouse, init.cameraMain );
     let intersects = raycaster.intersectObjects( arrayObjects,true );
     if ( intersects.length > 0 ) {
-        SELECTED = intersects[ 0 ].point;		 
-       
+        SELECTED = intersects[ 0 ].point;
+        playerMove(SELECTED);
+        // _Player.position.set(SELECTED.x,.2,SELECTED.z);		 
     }
+}
+const playerMove = (data) =>{
+    TweenMax.to(_Player.position,2,{x:data.x, y:.2, z:data.z,onUpdate:function(){
+        console.log('moving.....');
+    },onComplete:()=>{
+        console.log('Completed.....');
+    }});
 }
 const textureLoad = (tex) => {
     let _Tex = texLoader.load(tex,()=>{
