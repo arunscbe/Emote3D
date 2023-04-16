@@ -83,7 +83,7 @@ class sceneSetup {
         this.renderer.setSize(this.container.offsetWidth, this.container.offsetHeight);
         this.renderer.outputEncoding = THREE.sRGBEncoding;
         this.container.appendChild(this.renderer.domElement);
-        this.controls = new OrbitControls(this.cameraMain, this.renderer.domElement);
+        // this.controls = new OrbitControls(this.cameraMain, this.renderer.domElement);
         // this.controls.minDistance = 100;
         // this.controls.maxDistance = 300;
         // this.controls.maxPolarAngle = Math.PI / 2 * 115 / 120;
@@ -109,6 +109,8 @@ class sceneSetup {
     animate() {
         requestAnimationFrame(this.animate.bind(this));
         // this.controls.update();
+        
+        //CAMERA MOVE
         let relativeCameraOffset = new THREE.Vector3(2, 4, 2);
         let cameraOffset = relativeCameraOffset.applyMatrix4(this.camPoint.matrixWorld);
         this.cameraMain.position.x = cameraOffset.x;
@@ -117,12 +119,29 @@ class sceneSetup {
         this.cameraMain.lookAt(this.camPoint.position.x, this.camPoint.position.y, this.camPoint.position.z);
 
         this.renderer.render(this.scene, this.cameraMain);
+        if(_Player){
+            _menuColliders(_Player);
+        }
+        
     }
     render() {
         this.animate();
     }
 }
-
+const _menuColliders = (player) => {
+    const pos = player.position.clone();
+    let dir = new THREE.Vector3();
+    let raycaster = new THREE.Raycaster(pos, dir);
+    player.getWorldDirection(dir);
+    if (_collider != undefined) {
+        dir.set(0, -1, 0);
+        raycaster = new THREE.Raycaster(pos, dir);
+        let intersect = raycaster.intersectObjects(_collider);
+        if (intersect.length > 0) {
+            // console.log('INTERSECTED--->', intersect[0].object.name);
+        }
+    }
+}
 const onWindowResize=()=> {
     init.cameraMain.aspect = init.container.offsetWidth / init.container.offsetHeight;
     init.renderer.setSize(init.container.offsetWidth, init.container.offsetHeight);
@@ -141,7 +160,6 @@ const onDocumentMouseDown = (event) => {
     if ( intersects.length > 0 ) {
         SELECTED = intersects[ 0 ].point;
         playerMove(SELECTED);	
-        console.log(_collider); 
     }
 }
 const playerMove = (data) =>{
@@ -181,7 +199,12 @@ class objLoad {
                     }else if(child.name.includes('AboutUs') || child.name.includes('ContactUs') ||
                              child.name.includes('Home') || child.name.includes('Products') || 
                              child.name.includes('Service')){
+                                child.material = new THREE.MeshBasicMaterial({
+                                    map :  texLoader.load('tex/AboutUS.png'),
+                                    transparent:true,
+                                })
                                 _collider.push(child);
+                                // child.visible = false;
                     }
                     
                 }
