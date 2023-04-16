@@ -93,7 +93,7 @@ class sceneSetup {
         // this.controls.target = new THREE.Vector3(this.camPoint.position.x, this.camPoint.position.y, this.camPoint.position.z);
     }
     addingCube() {
-        this.geo = new THREE.BoxBufferGeometry(.1, 2, .1);
+        this.geo = new THREE.BoxBufferGeometry(.001, .001, .001);
         this.mat = material.cube;
         this.camPoint = new THREE.Mesh(this.geo, this.mat);
         this.scene.add(this.camPoint);
@@ -174,7 +174,7 @@ const textureLoad = (tex) => {
     let _Tex = texLoader.load(tex,()=>{
         _Tex.wrapS = _Tex.wrapT = THREE.RepeatWrapping;
         _Tex.offset.set( 0, 0 );
-        _Tex.repeat.set( 20, 20 );
+        _Tex.repeat.set( 16, 16 );
     });
     return _Tex;
 }
@@ -196,15 +196,39 @@ class objLoad {
                         arrayObjects.push(child);
                     }else if(child.name.includes('Player')){
                         _Player = child;
-                    }else if(child.name.includes('AboutUs') || child.name.includes('ContactUs') ||
-                             child.name.includes('Home') || child.name.includes('Products') || 
-                             child.name.includes('Service')){
+                    }else if(child.name.includes('Service')){
                                 child.material = new THREE.MeshBasicMaterial({
-                                    map :  texLoader.load('tex/AboutUS.png'),
+                                    map :  texLoader.load('tex/Services.png'),
                                     transparent:true,
                                 })
                                 _collider.push(child);
-                                // child.visible = false;
+                    }else if(child.name.includes('AboutUs')){
+                        child.material = new THREE.MeshBasicMaterial({
+                            map :  texLoader.load('tex/AboutUS.png'),
+                            transparent:true,
+                        })
+                        _collider.push(child);
+                    }
+                    else if(child.name.includes('ContactUs')){
+                        child.material = new THREE.MeshBasicMaterial({
+                            map :  texLoader.load('tex/Contactus.png'),
+                            transparent:true,
+                        })
+                        _collider.push(child);
+                    }
+                    else if(child.name.includes('Home')){
+                        child.material = new THREE.MeshBasicMaterial({
+                            map :  texLoader.load('tex/Home.png'),
+                            transparent:true,
+                        })
+                        _collider.push(child);
+                    }
+                    else if(child.name.includes('Products')){
+                        child.material = new THREE.MeshBasicMaterial({
+                            map :  texLoader.load('tex/Products.png'),
+                            transparent:true,
+                        })
+                        _collider.push(child);
                     }
                     
                 }
