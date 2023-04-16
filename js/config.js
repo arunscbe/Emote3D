@@ -7,7 +7,7 @@ let gltfpath = "assets/Floor.glb";
 let texLoader = new THREE.TextureLoader();
 let arrayObjects = [];
 let raycaster = new THREE.Raycaster(),mouse = new THREE.Vector2(),SELECTED;
-
+let _Player ;
 $(document).ready(function () {
     let detect = detectWebGL();
     if (detect == 1) {
@@ -91,12 +91,12 @@ class sceneSetup {
         // this.controls.maxAzimuthAngle = -115 / 120;
     }
     addingCube() {
-        this.geo = new THREE.BoxBufferGeometry(1, 1, 1);
+        this.geo = new THREE.BoxBufferGeometry(.0001, .0001, .0001);
         this.mat = material.cube;
         this.camPoint = new THREE.Mesh(this.geo, this.mat);
         this.scene.add(this.camPoint);
         this.camPoint.position.set(0, 0, 0);
-        arrayObjects.push(this.camPoint);
+        
 
     }
     ambientLight(ambientColor) {
@@ -129,9 +129,9 @@ const onDocumentMouseDown = (event) => {
     mouse.y = - ( ( event.clientY - rect.top ) / ( rect.bottom - rect.top) ) * 2 + 1;
     raycaster.setFromCamera( mouse, init.cameraMain );
     let intersects = raycaster.intersectObjects( arrayObjects,true );
-    if ( intersects.length > 0 ) {	 
-        SELECTED = intersects[ 0 ].object;	
-        console.log('SELECTED--->',SELECTED);
+    if ( intersects.length > 0 ) {
+        SELECTED = intersects[ 0 ].point;		 
+       
     }
 }
 const textureLoad = (tex) => {
@@ -153,10 +153,15 @@ class objLoad {
             this.mesh = gltf.scene;
             this.mesh.traverse((child)=>{
                 if(child.type === 'Mesh'){
-                    console.log(child);
-                    child.material = new THREE.MeshBasicMaterial({
-                        map : textureLoad('tex/floor.jpg'),
-                    })
+                    if(child.name.includes('Floor')){
+                        child.material = new THREE.MeshBasicMaterial({
+                            map : textureLoad('tex/floor.jpg'),
+                        })
+                        arrayObjects.push(child);
+                    }else if(child.name.includes('Player')){
+                        _Player = child;
+                    }
+                    
                 }
             });
             this.mesh.position.set(0, 0, 0);
