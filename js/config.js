@@ -196,7 +196,13 @@ class objLoad {
                         arrayObjects.push(child);
                     }else if(child.name.includes('Player')){
                         _Player = child;
-                    }else if(child.name.includes('Service')){
+                    }else if(child.name.includes('Content')){
+                        child.material = new THREE.MeshBasicMaterial({
+                            map :  texLoader.load('tex/Content.png'),
+                            transparent:true,
+                        })
+                    }
+                    else if(child.name.includes('Service')){
                                 child.material = new THREE.MeshBasicMaterial({
                                     map :  texLoader.load('tex/Services.png'),
                                     transparent:true,
