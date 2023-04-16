@@ -7,7 +7,8 @@ let gltfpath = "assets/Floor.glb";
 let texLoader = new THREE.TextureLoader();
 let arrayObjects = [];
 let raycaster = new THREE.Raycaster(),mouse = new THREE.Vector2(),SELECTED;
-let _Player ;
+let _Player , _collider=[] ;
+
 $(document).ready(function () {
     let detect = detectWebGL();
     if (detect == 1) {
@@ -139,15 +140,16 @@ const onDocumentMouseDown = (event) => {
     let intersects = raycaster.intersectObjects( arrayObjects,true );
     if ( intersects.length > 0 ) {
         SELECTED = intersects[ 0 ].point;
-        playerMove(SELECTED);	 
+        playerMove(SELECTED);	
+        console.log(_collider); 
     }
 }
 const playerMove = (data) =>{
     TweenMax.to(init.camPoint.position,2,{x:data.x, y:.2, z:data.z,onUpdate:function(){}});
     TweenMax.to(_Player.position,2,{x:data.x, y:.2, z:data.z,onUpdate:function(){
-        console.log('moving.....');
+        // console.log('moving.....');
     },onComplete:()=>{
-        console.log('Completed.....');
+        // console.log('Completed.....');
     }});
 }
 const textureLoad = (tex) => {
@@ -176,6 +178,10 @@ class objLoad {
                         arrayObjects.push(child);
                     }else if(child.name.includes('Player')){
                         _Player = child;
+                    }else if(child.name.includes('AboutUs') || child.name.includes('ContactUs') ||
+                             child.name.includes('Home') || child.name.includes('Products') || 
+                             child.name.includes('Service')){
+                                _collider.push(child);
                     }
                     
                 }
