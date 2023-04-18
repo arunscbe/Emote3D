@@ -1,6 +1,6 @@
-import * as THREE from './libs/three.module';
- import { GLTFLoader } from './libs/GLTFLoader';
-import {OrbitControls} from './libs/OrbitControls';
+import * as THREE from './libs/three.module.js';
+ import { GLTFLoader } from './libs/GLTFLoader.js';
+import {OrbitControls} from './libs/OrbitControls.js';
 // import {onWindowResize} from './resize.js'
 let init, modelLoad;
 let gltfpath = "assets/Floor.glb";
