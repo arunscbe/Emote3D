@@ -198,7 +198,7 @@ class objLoad {
                         _Player = child;
                     }else if(child.name.includes('Content')){
                         child.material = new THREE.MeshBasicMaterial({
-                            map :  texLoader.load('tex/Content.png'),
+                            map :  texLoader.load('tex/content.png'),
                             transparent:true,
                         })
                     }
